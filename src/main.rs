@@ -1,6 +1,7 @@
-#[macro_use] extern crate rocket;
-mod models;
+#[macro_use]
+extern crate rocket;
 mod database;
+mod models;
 
 #[get("/")]
 fn index() -> &'static str {

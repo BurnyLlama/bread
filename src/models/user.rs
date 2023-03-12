@@ -1,21 +1,23 @@
 use mongodb::bson::oid::ObjectId;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
+/// There are no "profile pictures" in Bread. Instead, each profile has a color.
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ProfileColor {
     Orange,
     Red,
     Green,
     Blue,
-    Grey
+    Grey,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserPreferences {
     pub prefers_darkmode: bool,
-    pub profile_color: ProfileColor
+    pub profile_color: ProfileColor,
 }
 
+///A user in Bread.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     #[serde(skip_serializing_if = "Option::is_none", rename = "_id")]
@@ -26,15 +28,17 @@ pub struct User {
 }
 
 impl User {
+    /// Create a new user from a name and password hash.
+    /// This does not save the user to the database!
     pub fn create(name: String, password: String) -> Self {
         User {
+            id: None,
             name: name,
             password: password,
-            id: None,
             preferences: UserPreferences {
                 prefers_darkmode: true,
-                profile_color: ProfileColor::Orange
-            }
+                profile_color: ProfileColor::Orange,
+            },
         }
     }
 }
@@ -43,9 +47,13 @@ impl User {
 mod tests {
     use super::*;
 
+    /// A test to see if a User is formatted in the way that is wished.
     #[test]
     fn create_user() {
-        let user = User::create("Cat_Lover_84".to_string(), "This is a hashed password!".to_string());
+        let user = User::create(
+            "Cat_Lover_84".to_string(),
+            "This is a hashed password!".to_string(),
+        );
         println!("Created the following: {:#?}", user);
     }
 }
