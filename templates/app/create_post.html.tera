@@ -1,0 +1,18 @@
+{% extends "template/app" %}
+
+{% block main %}
+    <header>
+        <h1>Welcome back, {{ username }}!</h1>
+    </header>
+    <form action="#" class="create-post">
+        <div class="top-bar">
+            <p>Write a post:</p>
+            <p>{{ postsLeft }}/{{ postsPerDay }} left</p>
+        </div>
+        <textarea name="post-content" id="post-content" placeholder="Start writing here..."></textarea>
+        <div class="actions">
+            <button id="forget-post-button">Forget</button>
+            <button type="submit">Post</button>
+        </div>
+    </form>
+{% endblock main %}

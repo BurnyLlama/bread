@@ -20,9 +20,23 @@ pub struct CreateUser<'r> {
 }
 
 #[post("/test-user", data = "<input>")]
-pub fn test_post_user(input: Json<CreateUser<'_>>, db: &State<DatabaseHandler>) -> Json<User> {
-    let user = User::create("Foo".to_string(), "Bar".to_string());
-    let user_id = db.save_user(&user);
+pub fn test_post_user(
+    input: Json<CreateUser<'_>>,
+    db: &State<DatabaseHandler>,
+) -> Result<Json<User>, String> {
+    let user = User::create(input.username.to_string(), input.password.to_string());
+    let user_id = db.save_user(&user)?;
+
+    if user_id.is_none() {
+        return Err("No such user!".to_string());
+    }
+
+    let user_from_db = db.find_user_by_id(user_id.unwrap())?;
+
+    match user_from_db {
+        Some(user) => Ok(Json(user)),
+        None => Err("No such user!".to_string()),
+    }
 }
 
 #[get("/test-post")]

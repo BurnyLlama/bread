@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+        <title>Bread</title>
+    {% endblock head %}
+</head>
+<body>
+    <nav>
+        <div class="logo">Bread</div>
+        <a href="#">Create Post</a>
+        <a href="#">Friends</a>
+        <a href="#">Search</a>
+        <a href="#">Random</a>
+        <a href="#">Profile</a>
+    </nav>
+    <main>
+        {% block main %}
+            <p>Hello world!</p>
+        {% endblock main %}
+    </main>
+</body>
+</html>

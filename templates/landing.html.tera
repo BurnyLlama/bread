@@ -1,0 +1,12 @@
+{% extends "template/base" %}
+
+{% block body%}
+    <header>
+        <h1>Welcome to bread!</h1>
+        <h2>The social media that <b>cares</b> about your mental well-being.</h2>
+    </header>
+    <div>
+        <a href="/app/register">Register!</a>
+        <a href="/app/login">Log in!</a>
+    </div>
+{% endblock body %}
