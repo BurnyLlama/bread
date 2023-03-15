@@ -11,11 +11,11 @@
 <body>
     <nav>
         <div class="logo">Bread</div>
-        <a href="#">Create Post</a>
-        <a href="#">Friends</a>
-        <a href="#">Search</a>
-        <a href="#">Random</a>
-        <a href="#">Profile</a>
+        <a href="/app/create-post">Create Post</a>
+        <a href="/app/friends">Friends</a>
+        <a href="/app/search">Search</a>
+        <a href="/app/random">Random</a>
+        <a href="/app/profile">Profile</a>
     </nav>
     <main>
         {% block main %}

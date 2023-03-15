@@ -1,5 +1,24 @@
 {% extends "template/app" %}
 
 {% block main %}
+    <header>
+        <h1>Your profile</h1>
+    </header>
+    <form action="#">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" value="{{ username }}">
 
+        <label for="profile-color">Profile color:</label>
+        <div class="colours">
+            <input type="radio" name="profile-color" id="profile-color-orange" value="orange">
+            <input type="radio" name="profile-color" id="profile-color-red" value="red">
+            <input type="radio" name="profile-color" id="profile-color-green" value="green">
+            <input type="radio" name="profile-color" id="profile-color-blue" value="blue">
+            <input type="radio" name="profile-color" id="profile-color-grey" value="grey">
+        </div>
+    </form>
+    <div class="buttons">
+        <button>My posts</button>
+        <button>Delete account</button>
+    </div>
 {% endblock main %}

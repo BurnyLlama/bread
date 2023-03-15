@@ -18,7 +18,14 @@ fn register() -> Template {
 
 #[get("/create-post")]
 fn create_post() -> Template {
-    Template::render("app/create-post", context! {})
+    Template::render(
+        "app/create-post",
+        context! {
+            username: "FooBar",
+            posts_left: 1,
+            posts_per_day: 2,
+        },
+    )
 }
 
 #[get("/friends")]
@@ -33,12 +40,18 @@ fn search() -> Template {
 
 #[get("/random")]
 fn random() -> Template {
-    Template::render("app/random", context! {})
+    Template::render(
+        "app/random",
+        context! {
+            posts_left: 3,
+            posts_per_day: 10,
+        },
+    )
 }
 
 #[get("/profile")]
 fn profile() -> Template {
-    Template::render("app/profile", context! {})
+    Template::render("app/profile", context! { username: "FooBar" })
 }
 
 pub fn get_app_routes() -> Vec<Route> {

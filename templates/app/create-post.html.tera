@@ -7,7 +7,7 @@
     <form action="#" class="create-post">
         <div class="top-bar">
             <p>Write a post:</p>
-            <p>{{ postsLeft }}/{{ postsPerDay }} left</p>
+            <p>{{ posts_left }}/{{ posts_per_day }} left</p>
         </div>
         <textarea name="post-content" id="post-content" placeholder="Start writing here..."></textarea>
         <div class="actions">

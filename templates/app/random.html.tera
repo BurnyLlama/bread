@@ -1,5 +1,20 @@
 {% extends "template/app" %}
 
 {% block main %}
-
+    <h1>Here is a random post:</h1>
+    <div class="post">
+        <div class="top-bar">
+            <div class="avatar orange"></div>
+            <p class="username">CatLover</p>
+            <p class="date">2023-03-03 19:02</p>
+        </div>
+        <p class="post-content">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pretium orci ac velit pretium, bibendum maximus nibh ornare. Curabitur auctor imperdiet porta. Suspendisse eu eros tortor. Donec lacinia neque quis libero ullamcorper faucibus. Nulla id semper tortor, sed auctor tellus. Morbi auctor, dui ut placerat pulvinar, enim nisl tristique mauris, vitae mattis tellus leo et orci. Duis vulputate erat et nibh vulputate accumsan. Duis commodo ullamcorper turpis nec tempor. Suspendisse laoreet leo ac risus scelerisque, eget commodo nisl posuere. Donec congue diam a orci congue, vel porttitor quam mollis. Vestibulum vulputate, lectus at commodo sagittis, mi purus lacinia tellus, vel porta mauris purus quis quam. In a augue blandit, sollicitudin turpis sed, lacinia massa. Mauris finibus justo at aliquam rhoncus. Nam tempor elementum egestas. Curabitur tempus euismod erat, consectetur laoreet ante malesuada in.
+        </p>
+    </div>
+    <div class="info">
+        <p class="posts-left">{{ posts_left }}/{{ posts_per_day }} posts left</p>
+        <button>Show another</button>
+        <button>Follow</button>
+    </div>
 {% endblock main %}

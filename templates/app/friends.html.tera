@@ -1,5 +1,49 @@
 {% extends "template/app" %}
 
 {% block main %}
+    <h1>Your friends!</h1>
+    <div class="friends">
+        <div class="friend">
+            <div class="avatar orange"></div>
+            <p class="username">CatLover</p>
+        </div>
+        <div class="friend">
+            <div class="avatar blue"></div>
+            <p class="username">RedPanda5</p>
+        </div>
+        <div class="friend">
+            <div class="avatar green"></div>
+            <p class="username">FauxFox</p>
+        </div>
+        <div class="friend">
+            <div class="avatar grey"></div>
+            <p class="username">Meowser</p>
+        </div>
+        <div class="friend">
+            <div class="avatar red"></div>
+            <p class="username">Zombert</p>
+        </div>
+    </div>
 
+    <h1>Their posts</h1>
+    <div class="posts">
+        <div class="post">
+            <div class="top-bar">
+                <div class="avatar orange"></div>
+                <p class="username">CatLover</p>
+                <p class="date">2023-03-03 19:02</p>
+            </div>
+            <p class="post-content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pretium orci ac velit pretium, bibendum maximus nibh ornare. Curabitur auctor imperdiet porta. Suspendisse eu eros tortor. Donec lacinia neque quis libero ullamcorper faucibus. Nulla id semper tortor, sed auctor tellus. Morbi auctor, dui ut placerat pulvinar, enim nisl tristique mauris, vitae mattis tellus leo et orci. Duis vulputate erat et nibh vulputate accumsan. Duis commodo ullamcorper turpis nec tempor. Suspendisse laoreet leo ac risus scelerisque, eget commodo nisl posuere. Donec congue diam a orci congue, vel porttitor quam mollis. Vestibulum vulputate, lectus at commodo sagittis, mi purus lacinia tellus, vel porta mauris purus quis quam. In a augue blandit, sollicitudin turpis sed, lacinia massa. Mauris finibus justo at aliquam rhoncus. Nam tempor elementum egestas. Curabitur tempus euismod erat, consectetur laoreet ante malesuada in.
+            </p>
+        </div>
+        <div class="post">
+            <div class="top-bar">
+                <div class="avatar blue"></div>
+                <p class="username">FauxFox</p>
+                <p class="date">2023-03-02 18:03</p>
+            </div>
+            <img src="https://source.unsplash.com/random/500x300" alt="MISSING" class="post-content">
+        </div>
+    </div>
 {% endblock main %}

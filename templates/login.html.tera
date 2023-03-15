@@ -3,9 +3,9 @@
 {% block body %}
     <h1>Log in to your account</h1>
     <form action="/auth/login" method="post">
-        <label for="username">Select a username:</label>
+        <label for="username">Your username:</label>
         <input type="text" name="username" id="username">
-        <label for="password">Select a strong password:</label>
+        <label for="password">Your password:</label>
         <input type="password" name="password" id="password">
         <input type="submit" value="Log in!">
     </form>
