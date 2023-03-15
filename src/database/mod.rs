@@ -1,7 +1,6 @@
 use dotenv::dotenv;
 use mongodb::{
-    bson::extjson::de::Error,
-    results::InsertOneResult,
+    bson::{doc, oid::ObjectId},
     sync::{Client, Collection, Database},
 };
 use std::{env, fmt::Display};
@@ -10,7 +9,7 @@ use crate::models::{post::Post, user::User};
 
 /// This holds a database and makes shortcuts for the respective collections.
 pub struct DatabaseHandler {
-    db: Database,
+    // db: Database,
     users: Collection<User>,
     posts: Collection<Post>,
 }
@@ -30,24 +29,33 @@ impl DatabaseHandler {
         let db = client.database("bread");
         let users = db.collection::<User>("users");
         let posts = db.collection::<Post>("posts");
-        Ok(Self { db, users, posts })
+        Ok(Self { users, posts })
     }
 
     /// Saves a user to the database.
-    pub fn save_user(self: &Self, user: &User) -> Result<InsertOneResult, String> {
-        self.users.insert_one(user, None).map_err(err_to_string)
+    /// Returns the id of the created user as an option.
+    pub fn save_user(self: &Self, user: &User) -> Result<Option<ObjectId>, String> {
+        let result = self.users.insert_one(user, None).map_err(err_to_string)?;
+        Ok(result.inserted_id.as_object_id())
+    }
+
+    /// Get a user from the database via an id.
+    pub fn find_user_by_id(&self, id: ObjectId) -> Result<Option<User>, String> {
+        self.users
+            .find_one(doc! { "_id": id }, None)
+            .map_err(err_to_string)
     }
 
     /// Saves a user to the database.
-    pub fn save_post(self: &Self, post: &Post) -> Result<InsertOneResult, String> {
-        self.posts.insert_one(post, None).map_err(err_to_string)
+    /// Returns the id of the created post as an option.
+    pub fn save_post(self: &Self, post: &Post) -> Result<Option<ObjectId>, String> {
+        let result = self.posts.insert_one(post, None).map_err(err_to_string)?;
+        Ok(result.inserted_id.as_object_id())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use mongodb::bson::oid::ObjectId;
-
     use super::*;
 
     /// This tests checks that it is possible to save a user to the database.
@@ -64,11 +72,7 @@ mod tests {
 
         // Try to save the user, if it fails, panic.
         let user_id = match db_handler.save_user(&user) {
-            Ok(user) => user
-                .inserted_id
-                .as_object_id()
-                // If converting to ObjectId fails, panic.
-                .expect("Could not convert to ObjectId!"),
+            Ok(user_id) => user_id.expect("Getting ObjectId failed!"),
             Err(err) => panic!("Could not save the user! Error: {}", err),
         };
 
