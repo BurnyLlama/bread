@@ -1,7 +1,7 @@
 use dotenv::dotenv;
 use mongodb::{
     bson::{doc, oid::ObjectId},
-    sync::{Client, Collection, Database},
+    sync::{Client, Collection},
 };
 use std::{env, fmt::Display};
 
@@ -32,25 +32,70 @@ impl DatabaseHandler {
         Ok(Self { users, posts })
     }
 
+    /*
+     * USERS
+     */
+
     /// Saves a user to the database.
     /// Returns the id of the created user as an option.
-    pub fn save_user(self: &Self, user: &User) -> Result<Option<ObjectId>, String> {
+    pub fn save_user(&self, user: &User) -> Result<Option<ObjectId>, String> {
         let result = self.users.insert_one(user, None).map_err(err_to_string)?;
         Ok(result.inserted_id.as_object_id())
     }
 
-    /// Get a user from the database via an id.
+    /// Get a user from the database via its id.
     pub fn find_user_by_id(&self, id: ObjectId) -> Result<Option<User>, String> {
         self.users
             .find_one(doc! { "_id": id }, None)
             .map_err(err_to_string)
     }
 
+    /*
+     * POSTS
+     */
+
     /// Saves a user to the database.
     /// Returns the id of the created post as an option.
-    pub fn save_post(self: &Self, post: &Post) -> Result<Option<ObjectId>, String> {
+    pub fn save_post(&self, post: &Post) -> Result<Option<ObjectId>, String> {
         let result = self.posts.insert_one(post, None).map_err(err_to_string)?;
         Ok(result.inserted_id.as_object_id())
+    }
+
+    /// Get a user from the database via its id.
+    pub fn find_post_by_id(&self, id: ObjectId) -> Result<Option<Post>, String> {
+        self.posts
+            .find_one(doc! { "_id": id }, None)
+            .map_err(err_to_string)
+    }
+
+    /// Fetch a random post from the database.
+    pub fn find_random_post(&self) -> Result<Post, String> {
+        // This aggregates one random post.
+        let aggregation = self
+            .posts
+            .aggregate([doc! { "$sample": { "size": 1 } }], None);
+
+        // Check if the aggregation returned a result or an error.
+        // If a result, handle it to read the result and turn it into a Post.
+        // If an error, wrap it into a string.
+        match aggregation {
+            Ok(mut cursor) => {
+                let result = match cursor.next() {
+                    Some(result) => result,
+                    None => return Err("No results were found!".to_string()),
+                };
+
+                match result {
+                    // Create a Post from the document data.
+                    Ok(document_data) => {
+                        mongodb::bson::from_document(document_data).map_err(err_to_string)
+                    }
+                    // Turn the error into a string.
+                    Err(err) => Err(err_to_string(err)),
+                }
+            }
+            Err(err) => Err(err_to_string(err)),
+        }
     }
 }
 
@@ -83,6 +128,19 @@ mod tests {
         match db_handler.save_post(&post) {
             Ok(_) => println!("Success!"),
             Err(err) => panic!("Could not save the user! Error: {}", err),
+        };
+    }
+
+    #[test]
+    fn find_random_post() {
+        let db_handler = match DatabaseHandler::create_connection() {
+            Ok(handler) => handler,
+            Err(err) => panic!("Could not connect to the database! Error: {}", err),
+        };
+
+        match db_handler.find_random_post() {
+            Ok(post) => println!("Success! Found post: {:?}", post),
+            Err(err) => panic!("{}", err),
         };
     }
 }
