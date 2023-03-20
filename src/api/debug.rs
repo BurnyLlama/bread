@@ -8,8 +8,10 @@ use crate::{
 };
 
 #[get("/test-user")]
-pub fn test_get_user() -> Json<User> {
-    Json(User::create("Foo".to_string(), "Bar".to_string()))
+pub fn test_get_user() -> Result<Json<User>, String> {
+    User::create("Foo".to_string(), "Bar".to_string())
+        .map(|user| Json(user))
+        .map_err(|err| err.to_string())
 }
 
 #[derive(Deserialize)]
@@ -24,7 +26,10 @@ pub fn test_post_user(
     input: Json<CreateUser<'_>>,
     db: &State<DatabaseHandler>,
 ) -> Result<Json<User>, String> {
-    let user = User::create(input.username.to_string(), input.password.to_string());
+    let user = match User::create(input.username.to_string(), input.password.to_string()) {
+        Ok(user) => user,
+        Err(_) => return Err("Error while creating user!".to_string()),
+    };
     let user_id = db.save_user(&user)?;
 
     if user_id.is_none() {

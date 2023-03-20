@@ -113,7 +113,10 @@ mod tests {
         };
 
         // Create a dummy user for the test.
-        let user = User::create("Foo".to_string(), "Bar".to_string());
+        let user = match User::create("Foo".to_string(), "Bar".to_string()) {
+            Ok(user) => user,
+            Err(err) => panic!("Could not create user! {:?}", err),
+        };
 
         // Try to save the user, if it fails, panic.
         let user_id = match db_handler.save_user(&user) {

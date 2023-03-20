@@ -1,3 +1,7 @@
+use argon2::{
+    password_hash::{rand_core::OsRng, SaltString},
+    Argon2, PasswordHasher,
+};
 use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
@@ -30,16 +34,28 @@ pub struct User {
 impl User {
     /// Create a new user from a name and password hash.
     /// This does not save the user to the database!
-    pub fn create(name: String, password: String) -> Self {
-        User {
+    pub fn create(
+        name: String,
+        password: String,
+    ) -> Result<Self, argon2::password_hash::errors::Error> {
+        let argon2 = Argon2::default();
+
+        let password_as_buffer = password.as_bytes();
+        let password_salt = SaltString::generate(OsRng);
+        let hashed_password = match argon2.hash_password(password_as_buffer, &password_salt) {
+            Ok(password) => password,
+            Err(err) => return Err(err),
+        };
+
+        Ok(User {
             id: None,
-            name: name,
-            password: password,
+            name,
+            password: hashed_password.to_string(),
             preferences: UserPreferences {
                 prefers_darkmode: true,
                 profile_color: ProfileColor::Orange,
             },
-        }
+        })
     }
 }
 
