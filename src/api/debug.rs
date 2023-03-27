@@ -36,7 +36,7 @@ pub fn test_post_user(
         return Err("No such user!".to_string());
     }
 
-    let user_from_db = db.find_user_by_id(user_id.unwrap())?;
+    let user_from_db = db.find_user_by_id(&user_id.unwrap())?;
 
     match user_from_db {
         Some(user) => Ok(Json(user)),

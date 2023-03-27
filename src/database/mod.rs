@@ -1,6 +1,7 @@
 use dotenv::dotenv;
 use mongodb::{
     bson::{doc, oid::ObjectId},
+    results::DeleteResult,
     sync::{Client, Collection},
 };
 use std::{env, fmt::Display};
@@ -44,9 +45,16 @@ impl DatabaseHandler {
     }
 
     /// Get a user from the database via its id.
-    pub fn find_user_by_id(&self, id: ObjectId) -> Result<Option<User>, String> {
+    pub fn find_user_by_id(&self, id: &ObjectId) -> Result<Option<User>, String> {
         self.users
             .find_one(doc! { "_id": id }, None)
+            .map_err(err_to_string)
+    }
+
+    /// Delete a user from the database via its id.
+    pub fn delete_user(&self, id: &ObjectId) -> Result<DeleteResult, String> {
+        self.users
+            .delete_one(doc! { "_id": id }, None)
             .map_err(err_to_string)
     }
 
@@ -62,9 +70,33 @@ impl DatabaseHandler {
     }
 
     /// Get a user from the database via its id.
-    pub fn find_post_by_id(&self, id: ObjectId) -> Result<Option<Post>, String> {
+    pub fn find_post_by_id(&self, id: &ObjectId) -> Result<Option<Post>, String> {
         self.posts
             .find_one(doc! { "_id": id }, None)
+            .map_err(err_to_string)
+    }
+
+    /// Delete a post from the database. Only the author of the post is allowed to delete it.
+    pub fn delete_post(
+        &self,
+        user_deleting_post: &ObjectId,
+        post_id: &ObjectId,
+    ) -> Result<DeleteResult, String> {
+        let post = self.find_post_by_id(post_id).map_err(err_to_string)?;
+
+        if post.is_none() {
+            return Err("Post not found!".to_string());
+        }
+
+        let post = post.unwrap();
+
+        // Make sure the author is the one trying to delete the post.
+        if &post.author != user_deleting_post {
+            return Err("Deleter is not author of post!".to_string());
+        }
+
+        self.posts
+            .delete_one(doc! { "_id": post.id }, None)
             .map_err(err_to_string)
     }
 
@@ -134,6 +166,48 @@ mod tests {
         };
     }
 
+    /// Make sure deletion of user and post works.
+    #[test]
+    fn create_save_and_delete_user_and_post() {
+        // Try to connect to the database, panic if it fails.
+        let db_handler = match DatabaseHandler::create_connection() {
+            Ok(handler) => handler,
+            Err(err) => panic!("Could not connect to the database! Error: {}", err),
+        };
+
+        // Create a dummy user for the test.
+        let user = match User::create("Foo".to_string(), "Bar".to_string()) {
+            Ok(user) => user,
+            Err(err) => panic!("Could not create user! {:?}", err),
+        };
+
+        // Try to save the user, if it fails, panic.
+        let user_id = match db_handler.save_user(&user) {
+            Ok(user_id) => user_id.expect("Getting ObjectId failed!"),
+            Err(err) => panic!("Could not save the user! Error: {}", err),
+        };
+
+        // Create a dummy post for the test. (It will not use a real user!)
+        let post = Post::create(user_id, Some("Foo".to_string()), Some(()));
+
+        // Try to save the user, if it fails, panic.
+        let post_id = match db_handler.save_post(&post) {
+            Ok(id) => id.expect("Could not get the post's id!"),
+            Err(err) => panic!("Could not save the user! Error: {}", err),
+        };
+
+        match db_handler.delete_post(&user_id, &post_id) {
+            Ok(_) => println!("Successfully deleted post!"),
+            Err(err) => println!("Could not delete post! {:?}", err),
+        }
+
+        match db_handler.delete_user(&user_id) {
+            Ok(_) => println!("Successfully deleted user!"),
+            Err(err) => println!("Could not delete post! {:?}", err),
+        }
+    }
+
+    /// Make sure it is possible to find a random post.
     #[test]
     fn find_random_post() {
         let db_handler = match DatabaseHandler::create_connection() {
