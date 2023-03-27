@@ -1,5 +1,5 @@
 use database::DatabaseHandler;
-use rocket::response::Redirect;
+use rocket::{fs::FileServer, response::Redirect};
 use rocket_dyn_templates::Template;
 
 #[macro_use]
@@ -24,6 +24,7 @@ fn rocket() -> _ {
         .mount("/", routes![index])
         .mount("/app", app::get_app_routes())
         .mount("/debug", api::debug::get_debug_routes())
+        .mount("/static", FileServer::from("./static"))
         .manage(database_handler)
         .attach(Template::fairing())
 }

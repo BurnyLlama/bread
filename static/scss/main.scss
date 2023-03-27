@@ -1,0 +1,19 @@
+@use "default";
+@use "font";
+@use "buttons";
+
+body {
+    background-color: var(--surface);
+    font-family: 'Recursive', sans-serif;
+    font-variation-settings:
+        "wght" 350,
+        "CRSV" 0.5;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: var(--text);
+}
+
+a {
+    color: var(--blue);
+}

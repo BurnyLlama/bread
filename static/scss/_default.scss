@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+
+body {
+    --surface: #04001F;
+    --standout: #18123D;
+    --text: #EFEDFA;
+
+    --orange: #F2AA3D;
+    --red: #E53948;
+    --green: #34D157;
+    --blue: #3993E5;
+    --grey: #A09CB8;
+
+    --primary: var(--orange);
+}
+
+body.light-theme {
+    --surface: #EFEDFA;
+    --standout: #CEDCE9;
+    --text: #04001F;
+}

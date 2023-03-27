@@ -1,0 +1,1 @@
+body{min-height:100vh}body,header,.actions{display:flex;flex-direction:column;align-items:center;justify-content:center}.actions,.actions>.btn{margin:1rem}.actions{flex-direction:row}header>img{width:20vmax}header>h1{font-variation-settings:"CASL" 1;font-size:4rem}header u{text-decoration:var(--primary) underline 2px}

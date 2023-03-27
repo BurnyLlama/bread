@@ -1,12 +1,17 @@
 {% extends "template/base" %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/landing.css">
+{% endblock head %}
+
 {% block body%}
     <header>
-        <h1>Welcome to bread!</h1>
-        <h2>The social media that <b>cares</b> about your mental well-being.</h2>
+        <img src="/static/logo.svg" alt="The logo for bread. It depicts a bread loaf.">
+        <h1>Welcome to Bread!</h1>
+        <h2>The social media that <u>cares</u> about your mental well-being and privacy.</h2>
     </header>
-    <div>
-        <a href="/app/register">Register!</a>
-        <a href="/app/login">Log in!</a>
+    <div class="actions">
+        <a class="btn primary" href="/app/register">Register!</a>
+        <a class="btn secondary" href="/app/login">Log in!</a>
     </div>
 {% endblock body %}
