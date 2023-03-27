@@ -7,7 +7,8 @@
 
 body {
     --surface: #04001F;
-    --standout: #18123D;
+    // --standout: #18123D;
+    --standout: #373352;
     --text: #EFEDFA;
 
     --orange: #F2AA3D;
@@ -23,4 +24,13 @@ body.light-theme {
     --surface: #EFEDFA;
     --standout: #CEDCE9;
     --text: #04001F;
+}
+
+body {
+    color: var(--text);
+    background-color: var(--surface);
+    font-family: 'Recursive', sans-serif;
+    font-variation-settings:
+        "wght" 350,
+        "CRSV" 0.5;
 }
