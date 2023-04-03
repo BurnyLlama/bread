@@ -1,11 +1,15 @@
 {% extends "template/base" %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/landing.css">
+{% endblock head %}
+
 {% block body %}
-    <h1>Register an account</h1>
     <form action="/auth/register" method="post">
-        <label for="username">Select a username:</label>
+        <h1>Register an account</h1>
+        <label for="username">Choose a username:</label>
         <input type="text" name="username" id="username">
-        <label for="password">Select a strong password:</label>
+        <label for="password">Choose a strong password:</label>
         <input type="password" name="password" id="password">
         <input class="primary" type="submit" value="Register!">
     </form>

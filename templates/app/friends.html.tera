@@ -1,25 +1,45 @@
 {% extends "template/app" %}
 
 {% block main %}
-    <h1>Your friends!</h1>
-    <div class="friends">
-        <div class="friend">
+    <h1>People you follow!</h1>
+    <div class="users">
+        <div class="user">
             <div class="avatar orange"></div>
             <p class="username">CatLover</p>
         </div>
-        <div class="friend">
+        <div class="user">
             <div class="avatar blue"></div>
             <p class="username">RedPanda5</p>
         </div>
-        <div class="friend">
+        <div class="user">
             <div class="avatar green"></div>
             <p class="username">FauxFox</p>
         </div>
-        <div class="friend">
+        <div class="user">
             <div class="avatar grey"></div>
             <p class="username">Meowser</p>
         </div>
-        <div class="friend">
+        <div class="user">
+            <div class="avatar red"></div>
+            <p class="username">Zombert</p>
+        </div>
+        <div class="user">
+            <div class="avatar orange"></div>
+            <p class="username">CatLover</p>
+        </div>
+        <div class="user">
+            <div class="avatar blue"></div>
+            <p class="username">RedPanda5</p>
+        </div>
+        <div class="user">
+            <div class="avatar green"></div>
+            <p class="username">FauxFox</p>
+        </div>
+        <div class="user">
+            <div class="avatar grey"></div>
+            <p class="username">Meowser</p>
+        </div>
+        <div class="user">
             <div class="avatar red"></div>
             <p class="username">Zombert</p>
         </div>

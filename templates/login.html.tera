@@ -1,8 +1,12 @@
 {% extends "template/base" %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/landing.css">
+{% endblock head %}
+
 {% block body %}
-    <h1>Log in to your account</h1>
     <form action="/auth/login" method="post">
+        <h1>Log in to your account</h1>
         <label for="username">Your username:</label>
         <input type="text" name="username" id="username">
         <label for="password">Your password:</label>

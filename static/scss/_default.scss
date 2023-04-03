@@ -7,8 +7,9 @@
 
 body {
     --surface: #04001F;
-    // --standout: #18123D;
+    --alt-surface: #18123D;
     --standout: #373352;
+    --text-placeholder: #A09CB8;
     --text: #EFEDFA;
 
     --orange: #F2AA3D;
@@ -26,11 +27,14 @@ body.light-theme {
     --text: #04001F;
 }
 
-body {
-    color: var(--text);
-    background-color: var(--surface);
+body, input, textarea {
     font-family: 'Recursive', sans-serif;
     font-variation-settings:
         "wght" 350,
         "CRSV" 0.5;
+}
+
+body {
+    color: var(--text);
+    background-color: var(--surface);
 }

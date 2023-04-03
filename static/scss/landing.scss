@@ -9,12 +9,13 @@ body, header, .actions {
     justify-content: center;
 }
 
-.actions, .actions > .btn {
-    margin: 1rem;
-}
-
 .actions {
     flex-direction: row;
+    margin: 1rem;
+
+    > .btn {
+        margin: 1rem;
+    }
 }
 
 header > img {
@@ -28,4 +29,26 @@ header > h1 {
 
 header u {
     text-decoration: var(--primary) underline 2px;
+}
+
+@media screen and (max-width: 800px) {
+    body {
+        margin: 0 2rem;
+    }
+
+    header {
+        align-items: start;
+
+        > img {
+            margin: 0 auto;
+        }
+
+        > h1 {
+            font-size: 2rem;
+        }
+
+        > h2 {
+            font-size: 1rem;
+        }
+    }
 }

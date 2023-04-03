@@ -2,7 +2,7 @@
 
 {% block main %}
     <h1>Here is a random post:</h1>
-    <div class="post">
+    <div class="post random">
         <div class="top-bar">
             <div class="avatar orange"></div>
             <p class="username">CatLover</p>
@@ -15,6 +15,6 @@
     <div class="info">
         <p class="posts-left">{{ posts_left }}/{{ posts_per_day }} posts left</p>
         <button>Show another</button>
-        <button>Follow</button>
+        <button class="primary">Follow</button>
     </div>
 {% endblock main %}
