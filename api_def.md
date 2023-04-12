@@ -97,3 +97,11 @@ prefers_darkmode: bool
 ```
 
 This lets a user change their preferences, which includes username, profile color, and whether or not they want dark mode.
+
+### POST: `/api/follow/<userid: ObjectId>` 🔐
+
+This lets a user follow another user.
+
+### POST: `/api/unfollow/<userid: ObjectId>` 🔐
+
+This lets a user unfollow another user.
