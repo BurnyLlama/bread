@@ -1,5 +1,0 @@
-{% extends "template/app" %}
-
-{% block main %}
-
-{% endblock main %}

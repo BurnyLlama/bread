@@ -33,11 +33,6 @@ fn friends() -> Template {
     Template::render("app/friends", context! {})
 }
 
-#[get("/search")]
-fn search() -> Template {
-    Template::render("app/search", context! {})
-}
-
 #[get("/random")]
 fn random() -> Template {
     Template::render(
