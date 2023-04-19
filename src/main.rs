@@ -23,6 +23,7 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index])
         .mount("/app", app::get_app_routes())
+        .mount("/api", api::get_api_routes())
         .mount("/debug", api::debug::get_debug_routes())
         .mount("/static", FileServer::from("./static"))
         .manage(database_handler)

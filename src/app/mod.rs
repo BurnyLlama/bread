@@ -56,7 +56,6 @@ pub fn get_app_routes() -> Vec<Route> {
         login,
         create_post,
         friends,
-        search,
         random,
         profile
     ]

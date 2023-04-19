@@ -51,6 +51,13 @@ impl DatabaseHandler {
             .map_err(err_to_string)
     }
 
+    /// Get a user from the database via its name.
+    pub fn find_user_by_name(&self, name: &str) -> Result<Option<User>, String> {
+        self.users
+            .find_one(doc! { "name": name }, None)
+            .map_err(err_to_string)
+    }
+
     /// Delete a user from the database via its id.
     pub fn delete_user(&self, id: &ObjectId) -> Result<DeleteResult, String> {
         self.users

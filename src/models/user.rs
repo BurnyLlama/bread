@@ -1,8 +1,6 @@
-use argon2::{
-    password_hash::{rand_core::OsRng, SaltString},
-    Argon2, PasswordHasher,
-};
+use argon2::{Config, ThreadMode, Variant, Version};
 use mongodb::bson::oid::ObjectId;
+use password_hash::rand_core::OsRng;
 use serde::{Deserialize, Serialize};
 
 /// There are no "profile pictures" in Bread. Instead, each profile has a color.
@@ -34,18 +32,30 @@ pub struct User {
 impl User {
     /// Create a new user from a name and password hash.
     /// This does not save the user to the database!
-    pub fn create(
-        name: String,
-        password: String,
-    ) -> Result<Self, argon2::password_hash::errors::Error> {
-        let argon2 = Argon2::default();
-
-        let password_as_buffer = password.as_bytes();
-        let password_salt = SaltString::generate(OsRng);
-        let hashed_password = match argon2.hash_password(password_as_buffer, &password_salt) {
-            Ok(password) => password,
-            Err(err) => return Err(err),
+    pub fn create(name: String, password: String) -> Result<Self, String> {
+        let argon2_config = Config {
+            variant: Variant::Argon2id,
+            version: Version::Version13,
+            mem_cost: 65536,
+            time_cost: 10,
+            lanes: 4,
+            thread_mode: ThreadMode::Parallel,
+            secret: &[],
+            ad: &[],
+            hash_length: 32,
         };
+
+        // Create a random hash.
+        let password_salt = password_hash::SaltString::generate(OsRng)
+            .as_str()
+            .to_owned();
+
+        let hashed_password = argon2::hash_encoded(
+            password.as_bytes(),
+            password_salt.as_bytes(),
+            &argon2_config,
+        )
+        .map_err(|err| err.to_string())?;
 
         Ok(User {
             id: None,
