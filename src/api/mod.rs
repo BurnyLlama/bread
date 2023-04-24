@@ -1,8 +1,22 @@
-use rocket::{form::Form, fs::TempFile, serde::json::Json, Route, State};
+use jsonwebtoken::{EncodingKey, Header};
+use rocket::{
+    form::Form,
+    fs::TempFile,
+    http::{Cookie, CookieJar},
+    serde::json::Json,
+    Route, State,
+};
+use serde::{Deserialize, Serialize};
 
 use crate::{database::DatabaseHandler, models::user::User};
 
 pub mod debug;
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Claim<'a> {
+    exp: usize,
+    sub: &'a str,
+}
 
 /// A form to get a username and password.
 /// Used to register or login a user.
@@ -47,12 +61,37 @@ fn auth_register(db: &State<DatabaseHandler>, user: Form<UserForm>) -> Result<St
 }
 
 #[post("/auth/login", data = "<user>")]
-fn auth_login(db: &State<DatabaseHandler>, user: Form<UserForm>) -> Result<Json<User>, String> {
+fn auth_login(
+    db: &State<DatabaseHandler>,
+    cookies: &CookieJar<'_>,
+    user: Form<UserForm>,
+) -> Result<Json<User>, String> {
     let username = &user.username;
     let password = &user.password;
 
-    db.login_user(username, password).map(Json)
-    //                               ^--- Convert user to JSON.
+    let user = db.login_user(username, password)?;
+
+    let claim = Claim {
+        exp: 0,
+        sub: &user.name,
+    };
+
+    let token = jsonwebtoken::encode(
+        &Header::default(),
+        &claim,
+        &EncodingKey::from_secret("SECRET".as_bytes()),
+    )
+    .map_err(|err| err.to_string())?;
+
+    cookies.add(
+        Cookie::build("api-token", token)
+            .path("/api")
+            .secure(true)
+            .http_only(true)
+            .finish(),
+    );
+
+    Ok(Json(user))
 }
 
 #[post("/auth/change-password", data = "<change_pass>")]
