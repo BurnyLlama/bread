@@ -1,7 +1,7 @@
 use dotenv::dotenv;
 use mongodb::{
     bson::{doc, oid::ObjectId},
-    results::DeleteResult,
+    results::{DeleteResult, UpdateResult},
     sync::{Client, Collection},
 };
 use std::{env, fmt::Display};
@@ -63,6 +63,39 @@ impl DatabaseHandler {
         self.users
             .delete_one(doc! { "_id": id }, None)
             .map_err(err_to_string)
+    }
+
+    /// Change a password for a user.
+    /// The `new_password` parameter should be hashed!
+    pub fn change_password(
+        &self,
+        username: &str,
+        new_password: &str,
+    ) -> Result<UpdateResult, String> {
+        self.users
+            .update_one(
+                doc! { "name": username },
+                doc! { "password": new_password },
+                None,
+            )
+            .map_err(err_to_string)
+    }
+
+    /// Check if a password matches a user's password.
+    pub fn login_user(&self, username: &str, password: &str) -> Result<User, String> {
+        let user_in_db = match self.find_user_by_name(username)? {
+            Some(user) => user,
+            None => return Err("No such user!".to_string()),
+        };
+
+        let hash_matches = argon2::verify_encoded(&user_in_db.password, password.as_bytes())
+            .map_err(|err| err.to_string())?;
+
+        if !hash_matches {
+            return Err("Wrong password!".to_string());
+        }
+
+        Ok(user_in_db)
     }
 
     /*

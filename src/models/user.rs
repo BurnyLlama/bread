@@ -3,6 +3,8 @@ use mongodb::bson::oid::ObjectId;
 use password_hash::rand_core::OsRng;
 use serde::{Deserialize, Serialize};
 
+use crate::database::DatabaseHandler;
+
 /// There are no "profile pictures" in Bread. Instead, each profile has a color.
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ProfileColor {
@@ -33,6 +35,20 @@ impl User {
     /// Create a new user from a name and password hash.
     /// This does not save the user to the database!
     pub fn create(name: String, password: String) -> Result<Self, String> {
+        let hashed_password = Self::hash_password(&password)?;
+
+        Ok(User {
+            id: None,
+            name,
+            password: hashed_password,
+            preferences: UserPreferences {
+                prefers_darkmode: true,
+                profile_color: ProfileColor::Orange,
+            },
+        })
+    }
+
+    pub fn hash_password(password: &str) -> Result<String, String> {
         let argon2_config = Config {
             variant: Variant::Argon2id,
             version: Version::Version13,
@@ -45,7 +61,7 @@ impl User {
             hash_length: 32,
         };
 
-        // Create a random hash.
+        // Create a random salt for the hash.
         let password_salt = password_hash::SaltString::generate(OsRng)
             .as_str()
             .to_owned();
@@ -55,17 +71,9 @@ impl User {
             password_salt.as_bytes(),
             &argon2_config,
         )
-        .map_err(|err| err.to_string())?;
+        .map_err(|err| err.to_string());
 
-        Ok(User {
-            id: None,
-            name,
-            password: hashed_password.to_string(),
-            preferences: UserPreferences {
-                prefers_darkmode: true,
-                profile_color: ProfileColor::Orange,
-            },
-        })
+        hashed_password
     }
 }
 
