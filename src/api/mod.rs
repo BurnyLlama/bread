@@ -1,4 +1,4 @@
-use jsonwebtoken::{EncodingKey, Header};
+use jsonwebtoken::Header;
 use rocket::{
     form::Form,
     fs::TempFile,
@@ -6,17 +6,13 @@ use rocket::{
     serde::json::Json,
     Route, State,
 };
-use serde::{Deserialize, Serialize};
 
 use crate::{database::DatabaseHandler, models::user::User};
 
-pub mod debug;
+use self::token::{Claims, ENCODING_KEY};
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Claim<'a> {
-    exp: usize,
-    sub: &'a str,
-}
+pub mod debug;
+pub mod token;
 
 /// A form to get a username and password.
 /// Used to register or login a user.
@@ -71,17 +67,13 @@ fn auth_login(
 
     let user = db.login_user(username, password)?;
 
-    let claim = Claim {
+    let claim = Claims {
         exp: 0,
-        sub: &user.name,
+        sub: user.name,
     };
 
-    let token = jsonwebtoken::encode(
-        &Header::default(),
-        &claim,
-        &EncodingKey::from_secret("SECRET".as_bytes()),
-    )
-    .map_err(|err| err.to_string())?;
+    let token = jsonwebtoken::encode(&Header::default(), &claim, &ENCODING_KEY)
+        .map_err(|err| err.to_string())?;
 
     cookies.add(
         Cookie::build("api-token", token)

@@ -3,8 +3,6 @@ use mongodb::bson::oid::ObjectId;
 use password_hash::rand_core::OsRng;
 use serde::{Deserialize, Serialize};
 
-use crate::database::DatabaseHandler;
-
 /// There are no "profile pictures" in Bread. Instead, each profile has a color.
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ProfileColor {
