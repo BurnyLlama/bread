@@ -1,8 +1,7 @@
 use jsonwebtoken::{DecodingKey, EncodingKey, Validation};
 use rocket::{
-    data::Outcome,
     http::Status,
-    request::{FromRequest, Request},
+    request::{FromRequest, Outcome, Request},
 };
 use serde::{Deserialize, Serialize};
 
