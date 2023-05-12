@@ -18,7 +18,7 @@ pub struct Claims {
 impl<'a> FromRequest<'a> for Claims {
     type Error = String;
 
-    async fn from_request(request: &'a Request<'_>) -> Outcome<'a, Self, Self::Error> {
+    async fn from_request(request: &'a Request<'_>) -> Outcome<Self, Self::Error> {
         let cookie = request
             .cookies()
             .get("api-token")
